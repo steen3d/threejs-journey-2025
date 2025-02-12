@@ -17,8 +17,30 @@ const scene = new THREE.Scene()
 
 // Textures
 const textureLoader = new THREE.TextureLoader();
-const doorColorTexture = textureLoader.load('\door\color.jpg');
-console.log(doorColorTexture);
+
+//  Floor
+const floorAlphaTexture = textureLoader.load('./floor/alpha.jpg');
+const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.jpg');
+const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.jpg');
+const floorDispTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.jpg');
+const floorNorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.jpg');
+
+floorColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+floorColorTexture.repeat.set(8, 8);
+floorARMTexture.repeat.set(8, 8);
+floorDispTexture.repeat.set(8, 8);
+floorNorTexture.repeat.set(8, 8);
+
+floorColorTexture.wrapS = THREE.RepeatWrapping;
+floorARMTexture.wrapS = THREE.RepeatWrapping;
+floorDispTexture.wrapS = THREE.RepeatWrapping;
+floorNorTexture.wrapS = THREE.RepeatWrapping;
+
+floorColorTexture.wrapT = THREE.RepeatWrapping;
+floorARMTexture.wrapT = THREE.RepeatWrapping;
+floorDispTexture.wrapT = THREE.RepeatWrapping;
+floorNorTexture.wrapT = THREE.RepeatWrapping;
 
 /**
  * House
@@ -27,7 +49,16 @@ console.log(doorColorTexture);
 // Floor
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(20, 20),
-    new THREE.MeshStandardMaterial()
+    new THREE.MeshStandardMaterial({
+        alphaMap: floorAlphaTexture,
+        transparent: true,
+        map: floorColorTexture,
+        aoMap: floorARMTexture,
+        roughnessMap: floorARMTexture,
+        metalnessMap: floorARMTexture,
+        normalMap: floorNorTexture
+    
+    })
 )
 floor.rotation.x = - Math.PI * 0.5;
 scene.add(floor);
@@ -95,12 +126,20 @@ scene.add(graves);
 for(let i = 0; i < 30; i++)
 {
 
-    const angle = Math.random() * Math.random * 2;
-    const x = Math.sin(angle)
-    const y = Math.cos(angle)
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 3 + Math.random() * 4;
+    const x = Math.sin(angle) * radius;
+    const z = Math.cos(angle) * radius;
 
     // Mesh
     const grave = new THREE.Mesh(graveGeometry, graveMaterial);
+    grave.position.x = x;
+    grave.position.y = Math.random() * 0.4;
+    grave.position.z = z;
+
+    grave.rotation.x = (Math.random() - 0.5) * 0.4;
+    grave.rotation.y = (Math.random() - 0.5) * 0.4;
+    grave.rotation.z = (Math.random() - 0.5) * 0.4;
 
     // Add graves to group
     graves.add(grave);
