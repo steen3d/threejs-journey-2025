@@ -42,13 +42,37 @@ floorARMTexture.wrapT = THREE.RepeatWrapping;
 floorDispTexture.wrapT = THREE.RepeatWrapping;
 floorNorTexture.wrapT = THREE.RepeatWrapping;
 
+// Walls
+const wallARMTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.jpg');
+const wallColorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.jpg');
+const wallNorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.jpg');
+
+wallColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+// Roof
+const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.jpg');
+const roofColorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_diff_1k.jpg');
+const roofNorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.jpg');
+
+roofColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+roofARMTexture.repeat.set(3, 1);
+roofColorTexture.repeat.set(3, 1);
+roofNorTexture.repeat.set(3, 1);
+roofARMTexture.wrapS = THREE.RepeatWrapping;
+roofColorTexture.wrapS = THREE.RepeatWrapping;
+roofNorTexture.wrapS = THREE.RepeatWrapping;
+roofARMTexture.wrapT = THREE.RepeatWrapping;
+roofColorTexture.wrapT = THREE.RepeatWrapping;
+roofNorTexture.wrapT = THREE.RepeatWrapping;
+
 /**
  * House
  */
 
 // Floor
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
+    new THREE.PlaneGeometry(20, 20, 100, 100),
     new THREE.MeshStandardMaterial({
         alphaMap: floorAlphaTexture,
         transparent: true,
@@ -56,12 +80,18 @@ const floor = new THREE.Mesh(
         aoMap: floorARMTexture,
         roughnessMap: floorARMTexture,
         metalnessMap: floorARMTexture,
-        normalMap: floorNorTexture
+        normalMap: floorNorTexture,
+        displacementMap: floorDispTexture,
+        displacementScale: 0.373,
+        displacementBias: -0.156
     
     })
 )
 floor.rotation.x = - Math.PI * 0.5;
 scene.add(floor);
+
+gui.add(floor.material, 'displacementScale').min(0).max(1).step(0.001);
+gui.add(floor.material, 'displacementBias').min(-1).max(1).step(0.001);
 
 // House container
 const house = new THREE.Group();
@@ -70,7 +100,14 @@ scene.add(house);
 //  Walls
 const walls = new THREE.Mesh(
     new THREE.BoxGeometry(4, 2.5, 4),
-    new THREE.MeshStandardMaterial()
+    new THREE.MeshStandardMaterial({
+        map: wallColorTexture,
+        normalMap: wallNorTexture,
+        aoMap: wallARMTexture,
+        roughnessMap: wallARMTexture,
+        metalnessMap: wallARMTexture
+
+    })
 )
 walls.position.y = 1.25;
 house.add(walls);
@@ -78,7 +115,13 @@ house.add(walls);
 // Roof
 const roof = new THREE.Mesh(
     new THREE.ConeGeometry(3.5, 1.5, 4),
-    new THREE.MeshStandardMaterial()
+    new THREE.MeshStandardMaterial({
+        map: roofColorTexture,
+        normalMap: roofNorTexture,
+        aoMap: roofARMTexture,
+        roughnessMap: roofARMTexture,
+        metalnessMap: roofARMTexture
+    })
 );
 roof.position.y = 2.5 + 0.75;
 roof.rotation.y = Math.PI * 0.25;
