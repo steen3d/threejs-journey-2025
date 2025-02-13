@@ -113,19 +113,120 @@ walls.position.y = 1.25;
 house.add(walls);
 
 // Roof
+
+const roofMaterial = new THREE.MeshStandardMaterial({
+    map: roofColorTexture,
+    normalMap: roofNorTexture,
+    aoMap: roofARMTexture,
+    roughnessMap: roofARMTexture,
+    metalnessMap: roofARMTexture
+})
+
 const roof = new THREE.Mesh(
     new THREE.ConeGeometry(3.5, 1.5, 4),
-    new THREE.MeshStandardMaterial({
-        map: roofColorTexture,
-        normalMap: roofNorTexture,
-        aoMap: roofARMTexture,
-        roughnessMap: roofARMTexture,
-        metalnessMap: roofARMTexture
-    })
+    roofMaterial
 );
+
 roof.position.y = 2.5 + 0.75;
 roof.rotation.y = Math.PI * 0.25;
-house.add(roof);
+// house.add(roof);
+
+//  Roof from scratch
+const roofGeometry = new THREE.BufferGeometry();
+
+const roofHeight = 1.5;
+const roofHalfWidth = 2.25;
+
+const topVert =   [0, 1 * roofHeight, 0];
+const baseVert1 = [roofHalfWidth, 0, -roofHalfWidth];
+const baseVert2 = [roofHalfWidth, 0, roofHalfWidth];
+const baseVert3 = [-roofHalfWidth, 0, roofHalfWidth];
+const baseVert4 = [-roofHalfWidth, 0, -roofHalfWidth];
+
+
+const roofVerts = new Float32Array([
+    topVert[0],    topVert[1],    topVert[2],
+    baseVert2[0],  baseVert2[1],  baseVert2[2],
+    baseVert1[0],  baseVert1[1],  baseVert1[2],
+
+    topVert[0],    topVert[1],    topVert[2],
+    baseVert3[0],  baseVert3[1],  baseVert3[2],
+    baseVert2[0],  baseVert2[1],  baseVert2[2],
+     
+    topVert[0],    topVert[1],    topVert[2],
+    baseVert4[0],  baseVert4[1],  baseVert4[2],
+    baseVert3[0],  baseVert3[1],  baseVert3[2],
+
+    topVert[0],    topVert[1],    topVert[2],
+    baseVert1[0],  baseVert1[1],  baseVert1[2],
+    baseVert4[0],  baseVert4[1],  baseVert4[2],
+
+    baseVert1[0],  baseVert1[1],  baseVert1[2],
+    baseVert2[0],  baseVert2[1],  baseVert2[2],
+    baseVert3[0],  baseVert3[1],  baseVert3[2],
+    
+    baseVert3[0],  baseVert3[1],  baseVert3[2],
+    baseVert4[0],  baseVert4[1],  baseVert4[2],
+    baseVert1[0],  baseVert1[1],  baseVert1[2],
+]);
+
+const roofUV = new Float32Array([
+    0.5, 1,
+      0, 0,
+      1, 0,
+
+    0.5, 1,
+      0, 0,
+      1, 0,
+
+    0.5, 1,
+      0, 0,
+      1, 0,
+
+    0.5, 1,
+      0, 0,
+      1, 0,
+
+      1, 1,
+      0, 1,
+      0, 0,
+
+      0, 0,
+      0, 1,
+      1, 1    
+      
+])
+
+roofGeometry.setAttribute( 'position', new THREE.BufferAttribute( roofVerts, 3 ) );
+const roofFromScratch = new THREE.Mesh( 
+    roofGeometry, 
+    roofMaterial
+);
+
+roofColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+roofARMTexture.repeat.set(3, 1);
+roofColorTexture.repeat.set(3, 1);
+roofNorTexture.repeat.set(3, 1);
+roofARMTexture.wrapS = THREE.RepeatWrapping;
+roofColorTexture.wrapS = THREE.RepeatWrapping;
+roofNorTexture.wrapS = THREE.RepeatWrapping;
+roofARMTexture.wrapT = THREE.RepeatWrapping;
+roofColorTexture.wrapT = THREE.RepeatWrapping;
+roofNorTexture.wrapT = THREE.RepeatWrapping;
+
+roofGeometry.computeVertexNormals();
+console.log(roofGeometry);
+roofGeometry.setAttribute('uv', new THREE.BufferAttribute(roofUV, 2));
+
+
+
+// roofFromScratch.position.y = 5;
+roofFromScratch.position.y = 2.5;
+gui.add(roofFromScratch.position, 'y').min(0).max(10).step(0.01);
+
+house.add(roofFromScratch);
+
 
 //  Door
 const door = new THREE.Mesh(
