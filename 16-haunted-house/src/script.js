@@ -8,17 +8,77 @@ import GUI from 'lil-gui'
  */
 // Debug
 const gui = new GUI()
+const guiParameters = {
+    bushColor: '#76a367',
+    doorColor: '#abd1cc',
+    ambientLightColor: '#86cdff',
+    ambientLightIntensity: 1,
+    directionalLightColor: '#86cdff',
+    directionalLightIntensity: 1,
+    doorLightColor: '#ff7d46',
+    doorLightIntensity: 2.69,
+    doorLightDist: 2.48,
+    doorLightDecay: 1
+}
+gui.addColor(guiParameters, 'bushColor')
+    .onChange(() => {
+        bushMaterial.color.set(guiParameters.bushColor)
+})
 
+gui.addColor(guiParameters, 'doorColor')
+    .onChange(() => {
+        doorMaterial.color.set(guiParameters.doorColor)
+})
+
+gui.addColor(guiParameters, 'ambientLightColor')
+    .onChange(() => {
+        ambientLight.color.set(guiParameters.ambientLightColor)
+})
+gui.add(guiParameters, 'ambientLightIntensity')
+    .onChange(() => {
+        ambientLight.intensity = guiParameters.ambientLightIntensity
+}).min(0).max(100).step(0.01)
+
+gui.addColor(guiParameters, 'directionalLightColor')
+    .onChange(() => {
+        directionalLight.color.set(guiParameters.directionalLightColor)
+})
+gui.add(guiParameters, 'directionalLightIntensity')
+    .onChange(() => {
+        directionalLight.intensity = guiParameters.directionalLightIntensity
+}).min(0).max(100).step(0.01)
+gui.addColor(guiParameters, 'doorLightColor')
+    .onChange(() => {
+        doorLight.color.set(guiParameters.doorLightColor)
+})
+gui.add(guiParameters, 'doorLightIntensity')
+    .onChange(() => {
+        doorLight.intensity = guiParameters.doorLightIntensity
+}).min(0).max(100).step(0.01)
+gui.add(guiParameters, 'doorLightDist')
+    .onChange(() => {
+        doorLight.distance = guiParameters.doorLightDist
+}).min(0).max(100).step(0.01)
+gui.add(guiParameters, 'doorLightDecay')
+    .onChange(() => {
+        doorLight.decay = guiParameters.doorLightDecay
+}).min(0).max(100).step(0.01)
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
 
-// Textures
+
+
+/**
+ *Textures 
+ */
+
+
 const textureLoader = new THREE.TextureLoader();
 
-//  Floor
+//  Floor Textures
 const floorAlphaTexture = textureLoader.load('./floor/alpha.jpg');
 const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.jpg');
 const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.jpg');
@@ -42,29 +102,74 @@ floorARMTexture.wrapT = THREE.RepeatWrapping;
 floorDispTexture.wrapT = THREE.RepeatWrapping;
 floorNorTexture.wrapT = THREE.RepeatWrapping;
 
-// Walls
+
+// Walls Textures
+
 const wallARMTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.jpg');
 const wallColorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.jpg');
 const wallNorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.jpg');
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace;
 
-// Roof
+
+// Roof Textures
+
 const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.jpg');
 const roofColorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_diff_1k.jpg');
 const roofNorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.jpg');
 
 roofColorTexture.colorSpace = THREE.SRGBColorSpace;
 
-roofARMTexture.repeat.set(3, 1);
-roofColorTexture.repeat.set(3, 1);
-roofNorTexture.repeat.set(3, 1);
+roofARMTexture.repeat.set(1, 1);
+roofColorTexture.repeat.set(1, 1);
+roofNorTexture.repeat.set(1, 1);
 roofARMTexture.wrapS = THREE.RepeatWrapping;
 roofColorTexture.wrapS = THREE.RepeatWrapping;
 roofNorTexture.wrapS = THREE.RepeatWrapping;
 roofARMTexture.wrapT = THREE.RepeatWrapping;
 roofColorTexture.wrapT = THREE.RepeatWrapping;
 roofNorTexture.wrapT = THREE.RepeatWrapping;
+
+
+// Bush Textures
+
+const bushARMTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.jpg');
+const bushColorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.jpg');
+const bushNorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.jpg');
+
+bushColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+bushARMTexture.repeat.set(2, 1);
+bushColorTexture.repeat.set(2, 1);
+bushNorTexture.repeat.set(2, 1);
+bushARMTexture.wrapS = THREE.RepeatWrapping;
+bushColorTexture.wrapS = THREE.RepeatWrapping;
+bushNorTexture.wrapS = THREE.RepeatWrapping;
+
+
+// Grave Textures
+
+const graveARMTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.jpg');
+const graveColorTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.jpg');
+const graveNorTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.jpg');
+
+graveColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+graveARMTexture.repeat.set(0.3, 0.4);
+graveColorTexture.repeat.set(0.3, 0.4);
+graveNorTexture.repeat.set(0.3, 0.4);
+
+// Door Textures
+
+const doorColorTexture = textureLoader.load('./door/color.jpg');
+const doorAlphaTexture = textureLoader.load('./door/alpha.jpg');
+const doorHeightTexture = textureLoader.load('./door/height.jpg');
+const doorAOTexture = textureLoader.load('./door/ambientOcclusion.jpg');
+const doorRoughnessTexture = textureLoader.load('./door/roughness.jpg');
+const doorMetalTexture = textureLoader.load('./door/metalness.jpg');
+const doorNormalTexture = textureLoader.load('./door/normal.jpg');
+
+doorColorTexture.colorSpace = THREE.SRGBColorSpace;
 
 /**
  * House
@@ -203,17 +308,6 @@ const roofFromScratch = new THREE.Mesh(
     roofMaterial
 );
 
-roofColorTexture.colorSpace = THREE.SRGBColorSpace;
-
-roofARMTexture.repeat.set(3, 1);
-roofColorTexture.repeat.set(3, 1);
-roofNorTexture.repeat.set(3, 1);
-roofARMTexture.wrapS = THREE.RepeatWrapping;
-roofColorTexture.wrapS = THREE.RepeatWrapping;
-roofNorTexture.wrapS = THREE.RepeatWrapping;
-roofARMTexture.wrapT = THREE.RepeatWrapping;
-roofColorTexture.wrapT = THREE.RepeatWrapping;
-roofNorTexture.wrapT = THREE.RepeatWrapping;
 
 roofGeometry.computeVertexNormals();
 console.log(roofGeometry);
@@ -223,17 +317,28 @@ roofGeometry.setAttribute('uv', new THREE.BufferAttribute(roofUV, 2));
 
 // roofFromScratch.position.y = 5;
 roofFromScratch.position.y = 2.5;
-gui.add(roofFromScratch.position, 'y').min(0).max(10).step(0.01);
+gui.add(roofFromScratch.position, 'y').min(0).max(10).step(0.01).name('Roof Y Position');
 
 house.add(roofFromScratch);
 
 
+
 //  Door
+const doorMaterial = new THREE.MeshStandardMaterial({
+    color: guiParameters.doorColor,
+    map: doorColorTexture,
+    displacementMap: doorHeightTexture,
+    aoMap: doorAOTexture,
+    roughnessMap: doorRoughnessTexture,
+    metalnessMap: doorMetalTexture,
+    alphaMap: doorAlphaTexture,
+    transparent: true,
+    displacementScale: 0.1,
+    displacementBias: -0.025
+})
 const door = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.2, 2.2),
-    new THREE.MeshStandardMaterial({
-        color: 'red'
-    })
+    new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
+    doorMaterial
 )
 door.position.y = 1;
 door.position.z = 2 + 0.01;
@@ -241,15 +346,12 @@ house.add(door);
 
 // Bushes
 
-const bushARMTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.jpg');
-const bushColorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.jpg');
-const bushNorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.jpg');
 
-bushColorTexture.colorSpace = THREE.SRGBColorSpace;
+
 
 const bushGeometry = new THREE.SphereGeometry(1, 16, 16);
 const bushMaterial = new THREE.MeshStandardMaterial({
-    color: 0x33bb22,
+    color: guiParameters.bushColor,
     map: bushColorTexture,
     normalMap: bushNorTexture,
     aoMap: bushARMTexture,
@@ -257,12 +359,7 @@ const bushMaterial = new THREE.MeshStandardMaterial({
     metalnessMap: bushARMTexture
 });
 
-bushARMTexture.repeat.set(2, 1);
-bushColorTexture.repeat.set(2, 1);
-bushNorTexture.repeat.set(2, 1);
-bushARMTexture.wrapS = THREE.RepeatWrapping;
-bushColorTexture.wrapS = THREE.RepeatWrapping;
-bushNorTexture.wrapS = THREE.RepeatWrapping;
+
 
 
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial);
@@ -288,7 +385,13 @@ house.add(bush1, bush2, bush3, bush4);
 
 // Graves
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
-const graveMaterial = new THREE.MeshStandardMaterial()
+const graveMaterial = new THREE.MeshStandardMaterial({
+    map: graveColorTexture,
+    aoMap: graveARMTexture,
+    roughnessMap: graveARMTexture,
+    metalnessMap: graveARMTexture,
+    normalMap: graveNorTexture
+})
 
 const graves = new THREE.Group()
 scene.add(graves);
@@ -319,13 +422,25 @@ for(let i = 0; i < 30; i++)
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
+const ambientLight = new THREE.AmbientLight(guiParameters.ambientLightColor, guiParameters.ambientLightIntensity)
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight('#ffffff', 1.5)
+const directionalLight = new THREE.DirectionalLight(guiParameters.directionalLightColor, guiParameters.directionalLightIntensity)
 directionalLight.position.set(3, 2, -8)
 scene.add(directionalLight)
+
+// Door Light
+const doorLight = new THREE.PointLight(guiParameters.doorLightColor, guiParameters.doorLightIntensity, guiParameters.doorLightDist, guiParameters.doorLightDecay)
+doorLight.position.set(0, 2.2, 2.5);
+house.add(doorLight);
+
+//  Ghosts
+
+const ghost1 = new THREE.PointLight('#8800ff', 6);
+const ghost2 = new THREE.PointLight('#ff0088', 6);
+const ghost3 = new THREE.PointLight('#ff0000', 6);
+scene.add(ghost1, ghost2, ghost3);
 
 /**
  * Sizes
@@ -364,6 +479,7 @@ scene.add(camera)
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
+
 /**
  * Renderer
  */
@@ -372,6 +488,27 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+//  Shadows
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+directionalLight.castShadow = true;
+ghost1.castShadow = true;
+ghost2.castShadow = true;
+ghost3.castShadow = true;
+
+walls.castShadow = true;
+walls.receiveShadow = true;
+
+roof.castShadow = true;
+
+floor.receiveShadow = true;
+
+for(const grave of graves.children){
+    grave.castShadow = true;
+    grave.receiveShadow = true;
+}
 
 /**
  * Animate
@@ -387,6 +524,21 @@ const tick = () =>
     // Update controls
     controls.update()
 
+    // Ghosts
+    const ghost1Angle = elapsedTime * 0.5;
+    ghost1.position.x = Math.cos(ghost1Angle) * 4;
+    ghost1.position.z = Math.sin(ghost1Angle) * 4;
+    ghost1.position.y = Math.sin(ghost1Angle * 2.34) * Math.sin(ghost1Angle * 2.34) * Math.sin(ghost1Angle * 3.45);
+    
+    const ghost2Angle = - elapsedTime * 0.38;
+    ghost2.position.x = Math.cos(ghost2Angle) * 5;
+    ghost2.position.z = Math.sin(ghost2Angle) * 5;
+    ghost2.position.y = Math.sin(ghost2Angle * 2.34) * Math.sin(ghost2Angle * 2.34) * Math.sin(ghost2Angle * 3.45);
+    
+    const ghost3Angle = - elapsedTime * 0.23;
+    ghost3.position.x = Math.cos(ghost3Angle) * 6;
+    ghost3.position.z = Math.sin(ghost3Angle) * 6;
+    ghost3.position.y = Math.sin(ghost3Angle * 2.34) * Math.sin(ghost3Angle * 2.34) * Math.sin(ghost3Angle * 3.45);
     // Render
     renderer.render(scene, camera)
 
