@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { Sky } from 'three/addons/objects/Sky.js'
 import { Timer } from 'three/addons/misc/Timer.js'
 import GUI from 'lil-gui'
 
@@ -79,11 +80,11 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader();
 
 //  Floor Textures
-const floorAlphaTexture = textureLoader.load('./floor/alpha.jpg');
-const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.jpg');
-const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.jpg');
-const floorDispTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.jpg');
-const floorNorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.jpg');
+const floorAlphaTexture = textureLoader.load('./floor/alpha.webp');
+const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.webp');
+const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.webp');
+const floorDispTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.webp');
+const floorNorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.webp');
 
 floorColorTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -105,18 +106,18 @@ floorNorTexture.wrapT = THREE.RepeatWrapping;
 
 // Walls Textures
 
-const wallARMTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.jpg');
-const wallColorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.jpg');
-const wallNorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.jpg');
+const wallARMTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.webp');
+const wallColorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.webp');
+const wallNorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.webp');
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace;
 
 
 // Roof Textures
 
-const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.jpg');
-const roofColorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_diff_1k.jpg');
-const roofNorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.jpg');
+const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.webp');
+const roofColorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_diff_1k.webp');
+const roofNorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.webp');
 
 roofColorTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -133,9 +134,9 @@ roofNorTexture.wrapT = THREE.RepeatWrapping;
 
 // Bush Textures
 
-const bushARMTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.jpg');
-const bushColorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.jpg');
-const bushNorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.jpg');
+const bushARMTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.webp');
+const bushColorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.webp');
+const bushNorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.webp');
 
 bushColorTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -149,9 +150,9 @@ bushNorTexture.wrapS = THREE.RepeatWrapping;
 
 // Grave Textures
 
-const graveARMTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.jpg');
-const graveColorTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.jpg');
-const graveNorTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.jpg');
+const graveARMTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.webp');
+const graveColorTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.webp');
+const graveNorTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.webp');
 
 graveColorTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -161,13 +162,13 @@ graveNorTexture.repeat.set(0.3, 0.4);
 
 // Door Textures
 
-const doorColorTexture = textureLoader.load('./door/color.jpg');
-const doorAlphaTexture = textureLoader.load('./door/alpha.jpg');
-const doorHeightTexture = textureLoader.load('./door/height.jpg');
-const doorAOTexture = textureLoader.load('./door/ambientOcclusion.jpg');
-const doorRoughnessTexture = textureLoader.load('./door/roughness.jpg');
-const doorMetalTexture = textureLoader.load('./door/metalness.jpg');
-const doorNormalTexture = textureLoader.load('./door/normal.jpg');
+const doorColorTexture = textureLoader.load('./door/color.webp');
+const doorAlphaTexture = textureLoader.load('./door/alpha.webp');
+const doorHeightTexture = textureLoader.load('./door/height.webp');
+const doorAOTexture = textureLoader.load('./door/ambientOcclusion.webp');
+const doorRoughnessTexture = textureLoader.load('./door/roughness.webp');
+const doorMetalTexture = textureLoader.load('./door/metalness.webp');
+const doorNormalTexture = textureLoader.load('./door/normal.webp');
 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -462,7 +463,7 @@ window.addEventListener('resize', () =>
 
     // Update renderer
     renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
 /**
@@ -487,7 +488,7 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1))
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 //  Shadows
 renderer.shadowMap.enabled = true;
@@ -518,6 +519,34 @@ directionalLight.shadow.camera.bottom = -8;
 directionalLight.shadow.camera.left = -8;
 directionalLight.shadow.camera.near = 1;
 directionalLight.shadow.camera.far = 20;
+
+ghost1.shadow.mapSize.width = 256;
+ghost1.shadow.mapSize.height = 256;
+ghost1.shadow.camera.far = 10;
+
+
+/* 
+ *Sky
+ */
+
+const sky = new Sky();
+sky.scale.set(100, 100, 100);
+scene.add(sky);
+
+sky.material.uniforms['turbidity'].value = 10;
+sky.material.uniforms['rayleigh'].value = 3;
+sky.material.uniforms['mieCoefficient'].value = 0.1;
+sky.material.uniforms['mieDirectionalG'].value = 0.95;
+sky.material.uniforms['sunPosition'].value.set(0.3, -0.038, -0.95);
+
+
+/* 
+ *Fog
+ */
+
+// scene.fog = new THREE.Fog('#ff0000', 1, 13);
+scene.fog = new THREE.FogExp2('#03343f', 0.1);
+
 
 
 /**
