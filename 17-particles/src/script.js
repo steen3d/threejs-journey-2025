@@ -18,30 +18,37 @@ const scene = new THREE.Scene()
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+const particleTexture = textureLoader.load('./textures/particles/2.png');
 
 /* 
     Particles
 */
 
-const particlesGeometry = new THREE.SphereGeometry(1, 32, 32)
 const particlesMaterial = new THREE.PointsMaterial({
-    size: 0.02,
-    sizeAttenuation: true
+    size: 0.08,
+    sizeAttenuation: true,
+    transparent: true
 })
-// const particles = new THREE.Points(particlesGeometry, particlesMaterial)
-// scene.add(particles);
+// particlesMaterial.color = new THREE.Color('#ff88cc');
+particlesMaterial.alphaMap = particleTexture;
+// particlesMaterial.alphaTest = 0.001;
+// particlesMaterial.depthTest = false;
+particlesMaterial.depthWrite = false;
+particlesMaterial.blending = THREE.AdditiveBlending;
+particlesMaterial.vertexColors = true;
 
 const randomPoints = new THREE.BufferGeometry();
-const pointsArray = new Float32Array(300);
-const numPoints = 100;
+const numPoints = 5000;
+const pointsArray = new Float32Array(numPoints * 3); // Length needs to be provided - number of points * 3
+const pointsColors = new Float32Array(numPoints * 3)
 const distanceMult = 10;
-for(let i = 0; i < numPoints; i++){
+for(let i = 0; i < numPoints * 3; i++){
     pointsArray[i] = (Math.random() - 0.5) * distanceMult;
-    pointsArray[i + 1] = (Math.random() - 0.5) * distanceMult;
-    pointsArray[i + 2] = (Math.random() - 0.5) * distanceMult;
+    pointsColors[i] = Math.random();
 }
 randomPoints.setAttribute('position', new THREE.BufferAttribute( pointsArray, 3));
-const randomParticles = new THREE.Points(randomPoints, particlesMaterial)
+randomPoints.setAttribute('color', new THREE.BufferAttribute( pointsColors, 3));
+const randomParticles = new THREE.Points(randomPoints, particlesMaterial);
 scene.add(randomParticles);
 /**
  * Sizes
@@ -96,6 +103,15 @@ const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
+    // Update Particles
+    // randomParticles.rotation.y = elapsedTime * 0.2;
+    for(let i = 0; i < numPoints; i++)
+    {
+        const i3 = i * 3;
+        const x = randomPoints.attributes.position.array[i3];
+        randomPoints.attributes.position.array[i3+1] = Math.sin(elapsedTime + x);
+    }
+    randomPoints.attributes.position.needsUpdate = true;
     // Update controls
     controls.update()
 
